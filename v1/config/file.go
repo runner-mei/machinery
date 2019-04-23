@@ -75,9 +75,9 @@ func fromFile(cnfPath string) (*Config, error) {
 	if err := yaml.Unmarshal(data, loadedCnf); err != nil {
 		return nil, fmt.Errorf("Unmarshal YAML error: %s", err)
 	}
-	if loadedCnf.AMQP == nil {
-		cnf.AMQP = nil
-	}
+	// if loadedCnf.AMQP == nil {
+	// 	cnf.AMQP = nil
+	// }
 
 	return cnf, nil
 }

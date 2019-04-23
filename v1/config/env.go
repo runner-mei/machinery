@@ -50,9 +50,9 @@ func fromEnvironment() (*Config, error) {
 		return nil, err
 	}
 
-	if loadedCnf.AMQP == nil {
-		cnf.AMQP = nil
-	}
+	// if loadedCnf.AMQP == nil {
+	// 	cnf.AMQP = nil
+	// }
 
 	return cnf, nil
 }

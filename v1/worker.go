@@ -8,7 +8,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/RichardKnop/machinery/v1/backends/amqp"
 	"github.com/RichardKnop/machinery/v1/log"
 	"github.com/RichardKnop/machinery/v1/retry"
 	"github.com/RichardKnop/machinery/v1/tasks"
@@ -51,13 +50,13 @@ func (worker *Worker) LaunchAsync(errorsChan chan<- error) {
 		log.INFO.Printf("- CustomQueue: %s", worker.Queue)
 	}
 	log.INFO.Printf("- ResultBackend: %s", cnf.ResultBackend)
-	if cnf.AMQP != nil {
-		log.INFO.Printf("- AMQP: %s", cnf.AMQP.Exchange)
-		log.INFO.Printf("  - Exchange: %s", cnf.AMQP.Exchange)
-		log.INFO.Printf("  - ExchangeType: %s", cnf.AMQP.ExchangeType)
-		log.INFO.Printf("  - BindingKey: %s", cnf.AMQP.BindingKey)
-		log.INFO.Printf("  - PrefetchCount: %d", cnf.AMQP.PrefetchCount)
-	}
+	// if cnf.AMQP != nil {
+	// 	log.INFO.Printf("- AMQP: %s", cnf.AMQP.Exchange)
+	// 	log.INFO.Printf("  - Exchange: %s", cnf.AMQP.Exchange)
+	// 	log.INFO.Printf("  - ExchangeType: %s", cnf.AMQP.ExchangeType)
+	// 	log.INFO.Printf("  - BindingKey: %s", cnf.AMQP.BindingKey)
+	// 	log.INFO.Printf("  - PrefetchCount: %d", cnf.AMQP.PrefetchCount)
+	// }
 
 	// Goroutine to start broker consumption and handle retries when broker connection dies
 	go func() {
@@ -282,10 +281,10 @@ func (worker *Worker) taskSucceeded(signature *tasks.Signature, taskResults []*t
 		return nil
 	}
 
-	// Defer purging of group meta queue if we are using AMQP backend
-	if worker.hasAMQPBackend() {
-		defer worker.server.GetBackend().PurgeGroupMeta(signature.GroupUUID)
-	}
+	// // Defer purging of group meta queue if we are using AMQP backend
+	// if worker.hasAMQPBackend() {
+	// 	defer worker.server.GetBackend().PurgeGroupMeta(signature.GroupUUID)
+	// }
 
 	// There is no chord callback, just return
 	if signature.ChordCallback == nil {
@@ -365,11 +364,11 @@ func (worker *Worker) taskFailed(signature *tasks.Signature, taskErr error) erro
 	return nil
 }
 
-// Returns true if the worker uses AMQP backend
-func (worker *Worker) hasAMQPBackend() bool {
-	_, ok := worker.server.GetBackend().(*amqp.Backend)
-	return ok
-}
+// // Returns true if the worker uses AMQP backend
+// func (worker *Worker) hasAMQPBackend() bool {
+// 	_, ok := worker.server.GetBackend().(*amqp.Backend)
+// 	return ok
+// }
 
 // SetErrorHandler sets a custom error handler for task errors
 // A default behavior is just to log the error after all the retry attempts fail
