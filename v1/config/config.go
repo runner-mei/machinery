@@ -5,11 +5,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"cloud.google.com/go/pubsub"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/sqs"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
@@ -43,9 +38,7 @@ var (
 			NormalTasksPollPeriod:  1000,
 			DelayedTasksPollPeriod: 20,
 		},
-		GCPPubSub: &GCPPubSubConfig{
-			Client: nil,
-		},
+		GCPPubSub: &GCPPubSubConfig{},
 	}
 
 	reloadDelay = time.Second * 10
@@ -83,14 +76,14 @@ type AMQPConfig struct {
 
 // DynamoDBConfig wraps DynamoDB related configuration
 type DynamoDBConfig struct {
-	Client          *dynamodb.DynamoDB
+	// Client          *dynamodb.DynamoDB
 	TaskStatesTable string `yaml:"task_states_table" envconfig:"TASK_STATES_TABLE"`
 	GroupMetasTable string `yaml:"group_metas_table" envconfig:"GROUP_METAS_TABLE"`
 }
 
 // SQSConfig wraps SQS related configuration
 type SQSConfig struct {
-	Client          *sqs.SQS
+	// Client          *sqs.SQS
 	WaitTimeSeconds int `yaml:"receive_wait_time_seconds" envconfig:"SQS_WAIT_TIME_SECONDS"`
 	// https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html
 	// visibility timeout should default to nil to use the overall visibility timeout for the queue
@@ -134,13 +127,13 @@ type RedisConfig struct {
 
 // GCPPubSubConfig wraps GCP PubSub related configuration
 type GCPPubSubConfig struct {
-	Client       *pubsub.Client
+	//Client       *pubsub.Client
 	MaxExtension time.Duration
 }
 
 // MongoDBConfig ...
 type MongoDBConfig struct {
-	Client   *mongo.Client
+	// Client   *mongo.Client
 	Database string
 }
 
